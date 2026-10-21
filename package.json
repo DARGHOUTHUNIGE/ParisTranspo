@@ -1,0 +1,13 @@
+{
+  "name": "paris-transpro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Paris Transpro international transport website",
+  "scripts": {
+    "dev": "http-server . -p 3001",
+    "start": "http-server . -p 3001"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
