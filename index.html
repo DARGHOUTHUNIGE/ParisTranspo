@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Paris Transpro – Déménagement, colis et voitures à l’international</title>
 <meta name="description" content="Paris Transpro : déménagement, livraison de colis et transport de voitures à l’international. Devis gratuit.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Paris Transpro – Déménagement et transport international">
+<meta property="og:description" content="Un déménagement, un colis ou une voiture à transporter à l’international ? Demandez votre devis gratuit.">
 <link rel="icon" type="image/webp" href="favicon.webp">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
@@ -115,6 +118,9 @@ section{padding:76px 0}
 .hero h1 span{color:#ffb4b8}
 .hero .sub{max-width:600px;font-size:1.12rem;color:rgba(255,255,255,.86)}
 .hero .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.hero .actions .btn{min-width:190px;text-align:center}
+.hero .actions .whatsapp{background:#25d366}
+.whatsapp-form{width:100%;margin-top:10px;background:#25d366}
 .hero .btn.ghost{border-color:rgba(255,255,255,.45);color:#fff}
 .hero .nav2 .btn.ghost{background:var(--bg);border-color:var(--brand);color:var(--brand)}
 .hero .nav2 .btn.ghost:hover{background:var(--brand);border-color:var(--brand);color:var(--surface)}
@@ -170,7 +176,8 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
     <span class="tag">Transport &amp; logistique · International</span>
     <h1>Déménagement, colis et voitures : on s’occupe de tout <span>partout dans le monde.</span></h1>
     <p>Paris Transpro prend en charge votre déménagement, la gestion de vos livraisons de colis à l’international et le transport de votre véhicule vers l’étranger.</p>
-    <div class="badges"><span>✔ Devis gratuit</span><span>✔ Réponse rapide</span><span>✔ Suivi de votre envoi</span><span>✔ France &amp; international</span></div>
+    <div class="badges"><span>✔ Devis gratuit</span><span>✔ Réponse sous 24h</span><span>✔ Suivi de votre envoi</span><span>✔ France &amp; international</span></div>
+    <div class="actions"><a class="btn" href="#devis">Demander mon devis gratuit</a><a class="btn whatsapp" href="https://wa.me/33780971094?text=Bonjour%20Paris%20Transpro%2C%20je%20souhaite%20un%20devis." target="_blank" rel="noopener">Écrire sur WhatsApp</a></div>
     
   </div>
   <div class="card" id="devis">
@@ -192,7 +199,8 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
         <label for="mail">E-mail*</label><input id="mail" type="email" inputmode="email" autocomplete="email">
         <label for="tel">Téléphone*</label><input id="tel" type="tel" inputmode="tel" autocomplete="tel">
         <label style="font-weight:400;font-size:.8rem;display:flex;gap:8px;align-items:flex-start"><input id="rgpd" type="checkbox" style="width:auto;margin-top:4px"><span>J’accepte que mes données soient traitées pour répondre à ma demande, selon la <a href="#confidentialite" data-l="priv" style="text-decoration:underline">politique de confidentialité</a>.*</span></label>
-        <div class="nav2"><button class="btn ghost" type="button" onclick="go(1)">Retour</button><button class="btn" type="button" onclick="send()">Recevoir mon devis</button></div>
+        <div class="nav2"><button class="btn ghost" type="button" onclick="go(1)">Retour</button><button class="btn" type="button" onclick="send()">Recevoir mon devis par e-mail</button></div>
+        <button class="btn whatsapp-form" type="button" onclick="sendWhatsAppDirect()">Envoyer la demande sur WhatsApp</button>
       </div>
       <div class="step" data-s="3"><div class="ok"><h3>Merci ! 🎉</h3><p>Votre demande est prête. Notre équipe vous recontacte au plus vite avec un devis personnalisé.</p><div class="nav2"><button class="btn" type="button" onclick="sendWhatsApp()">Envoyer sur WhatsApp</button><a class="btn ghost" href="#top">Retour à l’accueil</a></div></div></div>
     </form>
@@ -282,17 +290,18 @@ function go(n){if(n>cur){if(cur===0&&!need(["dep","arr"]))return}show(n)}
 document.querySelectorAll(".opts").forEach(function(g){g.addEventListener("click",function(e){var o=e.target.closest(".opt");if(!o)return;
 g.querySelectorAll(".opt").forEach(function(x){x.classList.remove("sel")});o.classList.add("sel");sel[g.dataset.k]=o.dataset.v})});
 var quoteBody="";
-function send(){if(!need(["nom","pre","mail","tel"]))return;if(!$("rgpd").checked){$("rgpd").focus();return}
+function prepareQuote(){if(!need(["nom","pre","mail","tel"]))return false;if(!$("rgpd").checked){$("rgpd").focus();return false}
 quoteBody=[
   "Service: "+$("srv").value,
   "Trajet: "+$("dep").value+" -> "+$("arr").value,
   "Date: "+$("dat").value,
   "Besoin: "+$("det").value,
   "Contact: "+$("pre").value+" "+$("nom").value+" / "+$("tel").value+" / "+$("mail").value
-].join("\n");
-show(3);
+].join("\n");return true}
+function send(){if(!prepareQuote())return;show(3);
 /* À brancher : remplacez par votre backend / formulaire. Par défaut ouvre l'e-mail. */
 window.location.href="mailto:ptranspro.info@gmail.com?subject="+encodeURIComponent("Demande de devis")+"&body="+encodeURIComponent(quoteBody)}
+function sendWhatsAppDirect(){if(!prepareQuote())return;show(3);window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
 function sendWhatsApp(){if(!quoteBody)return;window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
 
 var H={"confidentialite":"priv","mentions-legales":"ment","cgv":"cgv"},K={priv:"confidentialite",ment:"mentions-legales",cgv:"cgv"};
