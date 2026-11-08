@@ -196,7 +196,7 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
       </div>
       <div class="step" data-s="2">
         <div class="row"><div><label for="nom">Nom*</label><input id="nom" autocomplete="family-name"></div><div><label for="pre">Prénom*</label><input id="pre" autocomplete="given-name"></div></div>
-        <label for="mail">E-mail*</label><input id="mail" type="email" inputmode="email" autocomplete="email">
+        <label for="mail">E-mail <span style="font-weight:400;color:var(--muted)">(facultatif pour WhatsApp)</span></label><input id="mail" type="email" inputmode="email" autocomplete="email">
         <label for="tel">Téléphone*</label><input id="tel" type="tel" inputmode="tel" autocomplete="tel">
         <label style="font-weight:400;font-size:.8rem;display:flex;gap:8px;align-items:flex-start"><input id="rgpd" type="checkbox" style="width:auto;margin-top:4px"><span>J’accepte que mes données soient traitées pour répondre à ma demande, selon la <a href="#confidentialite" data-l="priv" style="text-decoration:underline">politique de confidentialité</a>.*</span></label>
         <div class="nav2"><button class="btn ghost" type="button" onclick="go(1)">Retour</button><button class="btn" type="button" onclick="send()">Recevoir mon devis par e-mail</button></div>
@@ -290,18 +290,18 @@ function go(n){if(n>cur){if(cur===0&&!need(["dep","arr"]))return}show(n)}
 document.querySelectorAll(".opts").forEach(function(g){g.addEventListener("click",function(e){var o=e.target.closest(".opt");if(!o)return;
 g.querySelectorAll(".opt").forEach(function(x){x.classList.remove("sel")});o.classList.add("sel");sel[g.dataset.k]=o.dataset.v})});
 var quoteBody="";
-function prepareQuote(){if(!need(["nom","pre","mail","tel"]))return false;if(!$("rgpd").checked){$("rgpd").focus();return false}
+function prepareQuote(channel){var required=["nom","pre","tel"];if(channel==="email")required.push("mail");if(!need(required))return false;if(!$("rgpd").checked){$("rgpd").focus();return false}
 quoteBody=[
   "Service: "+$("srv").value,
   "Trajet: "+$("dep").value+" -> "+$("arr").value,
   "Date: "+$("dat").value,
   "Besoin: "+$("det").value,
-  "Contact: "+$("pre").value+" "+$("nom").value+" / "+$("tel").value+" / "+$("mail").value
+  "Contact: "+$("pre").value+" "+$("nom").value+" / "+$("tel").value+" / "+($("mail").value||"E-mail non communiqué")
 ].join("\n");return true}
-function send(){if(!prepareQuote())return;show(3);
+function send(){if(!prepareQuote("email"))return;show(3);
 /* À brancher : remplacez par votre backend / formulaire. Par défaut ouvre l'e-mail. */
 window.location.href="mailto:ptranspro.info@gmail.com?subject="+encodeURIComponent("Demande de devis")+"&body="+encodeURIComponent(quoteBody)}
-function sendWhatsAppDirect(){if(!prepareQuote())return;show(3);window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
+function sendWhatsAppDirect(){if(!prepareQuote("whatsapp"))return;show(3);window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
 function sendWhatsApp(){if(!quoteBody)return;window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
 
 var H={"confidentialite":"priv","mentions-legales":"ment","cgv":"cgv"},K={priv:"confidentialite",ment:"mentions-legales",cgv:"cgv"};
