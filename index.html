@@ -38,7 +38,7 @@ h1{font-size:clamp(2rem,5vw,3.1rem);line-height:1.15;margin:.4em 0}
 .badges{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;font-size:.9rem;color:#c9d0e2}
 .card{background:var(--surface);color:var(--text);border-radius:16px;padding:26px;box-shadow:0 12px 40px rgba(0,0,0,.18)}
 .card h2{margin:0 0 4px;font-size:1.3rem}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0 18px}.steps i{height:5px;border-radius:3px;background:var(--line);font-style:normal}.steps i.on{background:var(--accent)}.steps-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.75rem;margin-top:-12px;margin-bottom:12px}.steps-labels span.on{color:var(--accent);font-weight:700}
+.steps{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:12px 0 18px}.steps i{height:5px;border-radius:3px;background:var(--line);font-style:normal}.steps i.on{background:var(--accent)}.steps-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.68rem;margin-top:-12px;margin-bottom:12px}.steps-labels span.on{color:var(--accent);font-weight:700}
 label{display:block;font-size:.85rem;font-weight:600;margin:12px 0 4px}
 input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--text);font:inherit}
 input[type="date"]{display:block;min-width:0;max-width:100%;appearance:auto}
@@ -49,6 +49,8 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:.85}
 .opt{border:2px solid var(--line);border-radius:10px;padding:12px;text-align:center;cursor:pointer;font-size:.9rem}
 .opt.sel{border-color:var(--accent);background:rgba(208,16,26,.08)}
 .opt b{display:block;font-size:1.4rem}
+.move-options{grid-template-columns:repeat(3,1fr)}.move-options .opt{min-height:145px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}.move-options img{width:48px;height:48px;object-fit:contain}
+.hint{font-size:.8rem;color:var(--muted);margin:4px 0 0}.required-note{font-size:.78rem;color:var(--muted);margin:8px 0 0}
 .nav2{display:flex;gap:10px;margin-top:18px}.nav2 .btn{flex:1}
 .step{display:none}.step.on{display:block}
 .ok{text-align:center;padding:20px 0}.ok h3{color:var(--accent)}
@@ -150,6 +152,7 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
   .card{padding:22px 18px;border-radius:18px}
   .card h2{font-size:1.35rem}
   .row{grid-template-columns:1fr}
+  .move-options{grid-template-columns:1fr}
   input,select,textarea{font-size:16px}
   .nav2{gap:8px}
   .nav2 .btn{min-height:48px}
@@ -182,27 +185,39 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
   </div>
   <div class="card" id="devis">
     <h2>Votre devis en quelques clics</h2>
-    <div class="steps" aria-label="Progression du formulaire"><i class="on"></i><i></i><i></i></div>
-    <div class="steps-labels" aria-hidden="true"><span class="on">Trajet</span><span>Besoin</span><span>Contact</span></div>
+    <div class="steps" aria-label="Progression du formulaire"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="steps-labels" aria-hidden="true"><span class="on">Départ</span><span>Arrivée</span><span>Contenu</span><span>Départ</span><span>Arrivée</span><span>Date</span><span>Contact</span></div>
     <form id="f" onsubmit="return false">
       <div class="step on" data-s="0">
-        <label>Service*</label><select id="srv"><option>Déménagement</option><option>Colis à l’international</option><option>Transport de voiture à l’international</option></select><label>Départ (ville / pays)*</label><input id="dep" placeholder="Ex. Paris">
-        <label>Arrivée (ville / pays)*</label><input id="arr" placeholder="Ex. Marseille">
-        <div class="nav2"><button class="btn" type="button" onclick="go(1)">Continuer</button></div>
+        <h3>Départ de</h3><div class="row"><div><label for="depCode">Code postal*</label><input id="depCode" inputmode="numeric" placeholder="Ex. 75001"></div><div><label for="depVille">Ville*</label><input id="depVille" placeholder="Ex. Paris"></div></div>
+        <label for="depAddr">Adresse* <span style="font-weight:400;color:var(--muted)">Numéro + nom de rue</span></label><input id="depAddr" placeholder="Ex. 12 rue de la Paix">
+        <p class="required-note">Les champs marqués d’un * sont obligatoires.</p><div class="nav2"><button class="btn" type="button" onclick="go(1)">Suivant</button></div><p class="hint">Gratuit - Aucune obligation</p>
       </div>
       <div class="step" data-s="1">
-        <label>Date souhaitée</label><input id="dat" type="date" autocomplete="off"><label>Décrivez votre besoin <span style="font-weight:400;color:var(--muted)">(facultatif)</span></label><textarea id="det" rows="4" placeholder="Volume du déménagement, nombre/poids des colis, marque et modèle du véhicule…"></textarea>
-        <div class="nav2"><button class="btn ghost" type="button" onclick="go(0)">Retour</button><button class="btn" type="button" onclick="go(2)">Continuer</button></div>
+        <h3>Arrivée à</h3><label for="arrVille">Ville*</label><input id="arrVille" placeholder="Ex. Marseille"><label for="arrAddr">Adresse* <span style="font-weight:400;color:var(--muted)">Numéro + nom de rue</span></label><input id="arrAddr" placeholder="Ex. 8 avenue des Fleurs">
+        <div class="nav2"><button class="btn ghost" type="button" onclick="go(0)">Retour</button><button class="btn" type="button" onclick="go(2)">Suivant</button></div>
       </div>
       <div class="step" data-s="2">
-        <div class="row"><div><label for="nom">Nom*</label><input id="nom" autocomplete="family-name"></div><div><label for="pre">Prénom*</label><input id="pre" autocomplete="given-name"></div></div>
-        <label for="mail">E-mail <span style="font-weight:400;color:var(--muted)">(facultatif pour WhatsApp)</span></label><input id="mail" type="email" inputmode="email" autocomplete="email">
-        <label for="tel">Téléphone*</label><input id="tel" type="tel" inputmode="tel" autocomplete="tel">
-        <label style="font-weight:400;font-size:.8rem;display:flex;gap:8px;align-items:flex-start"><input id="rgpd" type="checkbox" style="width:auto;margin-top:4px"><span>J’accepte que mes données soient traitées pour répondre à ma demande, selon la <a href="#confidentialite" data-l="priv" style="text-decoration:underline">politique de confidentialité</a>.*</span></label>
-        <div class="nav2"><button class="btn ghost" type="button" onclick="go(1)">Retour</button><button class="btn" type="button" onclick="send()">Recevoir mon devis par e-mail</button></div>
-        <button class="btn whatsapp-form" type="button" onclick="sendWhatsAppDirect()">Envoyer la demande sur WhatsApp</button>
+        <h3>Que déménagez-vous ?</h3><div class="opts move-options" data-k="moveType"><button class="opt" type="button" data-v="Contenu total du domicile"><img src="https://www.demenagement24.com/resources/img/icons/png/move/lead-form/house.png" alt=""> <b>Contenu total</b><span>Meubles et objets du domicile</span></button><button class="opt" type="button" data-v="Contenu partiel du domicile"><img src="https://www.demenagement24.com/resources/img/icons/png/move/lead-form/house_partial.png" alt=""><b>Contenu partiel</b><span>Une partie du domicile</span></button><button class="opt" type="button" data-v="Moins de 10 cartons"><img src="https://www.demenagement24.com/resources/img/icons/png/move/lead-form/boxes.png" alt=""><b>Moins de 10 cartons</b><span>Moins de 2 m³</span></button></div>
+        <div class="nav2"><button class="btn ghost" type="button" onclick="go(1)">Retour</button><button class="btn" type="button" onclick="go(3)">Suivant</button></div>
       </div>
-      <div class="step" data-s="3"><div class="ok"><h3>Merci ! 🎉</h3><p>Votre demande est prête. Notre équipe vous recontacte au plus vite avec un devis personnalisé.</p><div class="nav2"><button class="btn" type="button" onclick="sendWhatsApp()">Envoyer sur WhatsApp</button><a class="btn ghost" href="#top">Retour à l’accueil</a></div></div></div>
+      <div class="step" data-s="3">
+        <h3>Détails de votre résidence actuelle</h3><label for="currentType">Départ de*</label><select id="currentType"><option value="">Sélectionnez</option><option>Maison</option><option>Appartement</option></select><div id="currentElevatorField"><label>Ascenseur disponible*</label><div class="opts" data-k="currentElevator"><button class="opt" type="button" data-v="Oui">Oui</button><button class="opt" type="button" data-v="Non">Non</button></div></div><label for="volume">Estimation du volume*</label><select id="volume"><option value="">Sélectionnez</option><option>2–10 m³</option><option>Studio : 10–15 m³</option><option>1 pièce : 15–20 m³</option><option>2 pièces : 20–30 m³</option><option>3 pièces : 30–40 m³</option><option>4 pièces : 40–50 m³</option><option>5 pièces et plus : + de 50 m³</option></select>
+        <div class="nav2"><button class="btn ghost" type="button" onclick="go(2)">Retour</button><button class="btn" type="button" onclick="go(4)">Suivant</button></div>
+      </div>
+      <div class="step" data-s="4">
+        <h3>Détails de votre nouvelle résidence</h3><label for="newType">Arrivée à*</label><select id="newType"><option value="">Sélectionnez</option><option>Maison</option><option>Appartement</option></select><label>Informations supplémentaires sur votre déménagement ?</label><div class="opts" data-k="extraInfo"><button class="opt" type="button" data-v="Oui">Oui</button><button class="opt" type="button" data-v="Non">Non</button></div><textarea id="det" rows="3" placeholder="Précisions utiles (facultatif)"></textarea>
+        <div class="nav2"><button class="btn ghost" type="button" onclick="go(3)">Retour</button><button class="btn" type="button" onclick="go(5)">Suivant</button></div>
+      </div>
+      <div class="step" data-s="5">
+        <h3>Quand déménagez-vous ?</h3><label>Type de date*</label><div class="opts" data-k="dateType"><button class="opt" type="button" data-v="À une date précise">À une date précise</button><button class="opt" type="button" data-v="Dans une plage de dates">Dans une plage de dates</button></div><div class="row"><div><label for="dateFrom">Date du déménagement*</label><input id="dateFrom" type="date"></div><div><label for="dateTo">Jusqu’au (facultatif)</label><input id="dateTo" type="date"></div></div>
+        <div class="nav2"><button class="btn ghost" type="button" onclick="go(4)">Retour</button><button class="btn" type="button" onclick="go(6)">Suivant</button></div>
+      </div>
+      <div class="step" data-s="6">
+        <h3>Vos coordonnées</h3><div class="row"><div><label for="nom">Nom*</label><input id="nom" autocomplete="family-name"></div><div><label for="pre">Prénom*</label><input id="pre" autocomplete="given-name"></div></div><label for="mail">E-mail <span style="font-weight:400;color:var(--muted)">(facultatif pour WhatsApp)</span></label><input id="mail" type="email" inputmode="email" autocomplete="email"><label for="tel">Téléphone*</label><input id="tel" type="tel" inputmode="tel" autocomplete="tel"><label style="font-weight:400;font-size:.8rem;display:flex;gap:8px;align-items:flex-start"><input id="rgpd" type="checkbox" style="width:auto;margin-top:4px"><span>J’accepte que mes données soient traitées pour répondre à ma demande, selon la <a href="#confidentialite" data-l="priv" style="text-decoration:underline">politique de confidentialité</a>.*</span></label>
+        <div class="nav2"><button class="btn ghost" type="button" onclick="go(5)">Retour</button><button class="btn" type="button" onclick="send()">Recevoir mon devis par e-mail</button></div><button class="btn whatsapp-form" type="button" onclick="sendWhatsAppDirect()">Envoyer la demande sur WhatsApp</button>
+      </div>
+      <div class="step" data-s="7"><div class="ok"><h3>Merci ! 🎉</h3><p>Votre demande est prête. Notre équipe vous recontacte au plus vite avec un devis personnalisé.</p><div class="nav2"><button class="btn" type="button" onclick="sendWhatsApp()">Envoyer sur WhatsApp</button><a class="btn ghost" href="#top">Retour à l’accueil</a></div></div></div>
     </form>
   </div>
 </div></div>
@@ -283,25 +298,32 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
 var cur=0,sel={etat:"Roulant",type:"Camion plateau"};
 function $(i){return document.getElementById(i)}
 function show(n){cur=n;document.querySelectorAll(".step").forEach(function(s){s.classList.toggle("on",+s.dataset.s===n)});
-document.querySelectorAll(".steps i").forEach(function(b,i){b.classList.toggle("on",i<=Math.min(n,2))});
-document.querySelectorAll(".steps-labels span").forEach(function(b,i){b.classList.toggle("on",i<=Math.min(n,2))})}
+document.querySelectorAll(".steps i").forEach(function(b,i){b.classList.toggle("on",i<=Math.min(n,6))});
+document.querySelectorAll(".steps-labels span").forEach(function(b,i){b.classList.toggle("on",i<=Math.min(n,6))})}
 function need(ids){for(var i=0;i<ids.length;i++){var e=$(ids[i]);if(!e.value.trim()){e.focus();return false}}return true}
-function go(n){if(n>cur){if(cur===0&&!need(["dep","arr"]))return}show(n)}
+function chosen(key){if(!sel[key]){var group=document.querySelector('[data-k="'+key+'"]');if(group)group.scrollIntoView({block:"center"});return false}return true}
+function go(n){if(n>cur){if(cur===0&&!need(["depCode","depVille","depAddr"]))return;if(cur===1&&!need(["arrVille","arrAddr"]))return;if(cur===2&&!chosen("moveType"))return;if(cur===3&&!need(["currentType","volume"]))return;if(cur===3&&$("currentType").value==="Appartement"&&!chosen("currentElevator"))return;if(cur===4&&!need(["newType"]))return;if(cur===5&&(!chosen("dateType")||!need(["dateFrom"])||(sel.dateType==="Dans une plage de dates"&&!need(["dateTo"]))))return}show(n)}
 document.querySelectorAll(".opts").forEach(function(g){g.addEventListener("click",function(e){var o=e.target.closest(".opt");if(!o)return;
 g.querySelectorAll(".opt").forEach(function(x){x.classList.remove("sel")});o.classList.add("sel");sel[g.dataset.k]=o.dataset.v})});
+document.getElementById("currentType").addEventListener("change",function(){var field=document.getElementById("currentElevatorField");field.hidden=this.value==="Maison";if(this.value==="Maison")delete sel.currentElevator});
+document.getElementById("currentElevatorField").hidden=true;
 var quoteBody="";
 function prepareQuote(channel){var required=["nom","pre","tel"];if(channel==="email")required.push("mail");if(!need(required))return false;if(!$("rgpd").checked){$("rgpd").focus();return false}
 quoteBody=[
-  "Service: "+$("srv").value,
-  "Trajet: "+$("dep").value+" -> "+$("arr").value,
-  "Date: "+$("dat").value,
-  "Besoin: "+$("det").value,
+  "Service: Déménagement",
+  "Départ: "+$("depAddr").value+", "+$("depCode").value+" "+$("depVille").value,
+  "Arrivée: "+$("arrAddr").value+", "+$("arrVille").value,
+  "Contenu: "+(sel.moveType||"Non précisé"),
+  "Résidence départ: "+$("currentType").value+" / Ascenseur: "+(sel.currentElevator||"Non applicable")+" / Volume: "+$("volume").value,
+  "Résidence arrivée: "+$("newType").value+" / Informations supplémentaires: "+(sel.extraInfo||"Non précisé"),
+  "Date: "+(sel.dateType||"Non précisée")+" / Du "+$("dateFrom").value+" au "+($("dateTo").value||$("dateFrom").value),
+  "Détails: "+($("det").value||"Aucun"),
   "Contact: "+$("pre").value+" "+$("nom").value+" / "+$("tel").value+" / "+($("mail").value||"E-mail non communiqué")
 ].join("\n");return true}
-function send(){if(!prepareQuote("email"))return;show(3);
+function send(){if(!prepareQuote("email"))return;show(7);
 /* À brancher : remplacez par votre backend / formulaire. Par défaut ouvre l'e-mail. */
 window.location.href="mailto:ptranspro.info@gmail.com?subject="+encodeURIComponent("Demande de devis")+"&body="+encodeURIComponent(quoteBody)}
-function sendWhatsAppDirect(){if(!prepareQuote("whatsapp"))return;show(3);window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
+function sendWhatsAppDirect(){if(!prepareQuote("whatsapp"))return;show(7);window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
 function sendWhatsApp(){if(!quoteBody)return;window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
 
 var H={"confidentialite":"priv","mentions-legales":"ment","cgv":"cgv"},K={priv:"confidentialite",ment:"mentions-legales",cgv:"cgv"};
