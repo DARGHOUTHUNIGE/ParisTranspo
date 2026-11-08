@@ -37,8 +37,8 @@ h1{font-size:clamp(2rem,5vw,3.1rem);line-height:1.15;margin:.4em 0}
 .hero p{color:#c9d0e2;max-width:520px}
 .badges{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;font-size:.9rem;color:#c9d0e2}
 .card{background:var(--surface);color:var(--text);border-radius:16px;padding:26px;box-shadow:0 12px 40px rgba(0,0,0,.18)}
-.card h2{margin:0 0 4px;font-size:1.3rem}
-.steps{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:12px 0 18px}.steps i{height:5px;border-radius:3px;background:var(--line);font-style:normal}.steps i.on{background:var(--accent)}.steps-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.68rem;margin-top:-12px;margin-bottom:12px}.steps-labels span.on{color:var(--accent);font-weight:700}
+.card h2{margin:0 0 4px;font-size:1.3rem}.card-trust{color:var(--muted);font-size:.82rem;margin:0 0 8px}
+.steps{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:12px 0 18px}.steps i{height:5px;border-radius:3px;background:var(--line);font-style:normal}.steps i.on{background:var(--accent)}.steps-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.68rem;margin-top:-12px;margin-bottom:12px}.steps-labels span.on{color:var(--accent);font-weight:700}.form-error{min-height:0;color:#b00020;font-size:.82rem;margin:0}.form-error:not(:empty){margin:8px 0}
 label{display:block;font-size:.85rem;font-weight:600;margin:12px 0 4px}
 input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--text);font:inherit}
 input[type="date"]{display:block;min-width:0;max-width:100%;appearance:auto}
@@ -177,17 +177,17 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
 <div class="hero"><div class="wrap">
   <div>
     <span class="tag">Transport &amp; logistique · International</span>
-    <h1>Déménagement, colis et voitures : on s’occupe de tout <span>partout dans le monde.</span></h1>
-    <p>Paris Transpro prend en charge votre déménagement, la gestion de vos livraisons de colis à l’international et le transport de votre véhicule vers l’étranger.</p>
+    <h1>Votre déménagement international, <span>simplement.</span></h1>
+    <p>Donnez-nous votre trajet et quelques détails. Recevez un devis gratuit et personnalisé sous 24 h.</p>
     <div class="badges"><span>✔ Devis gratuit</span><span>✔ Réponse sous 24h</span><span>✔ Suivi de votre envoi</span><span>✔ France &amp; international</span></div>
     <div class="actions"><a class="btn" href="#devis">Demander mon devis gratuit</a><a class="btn whatsapp" href="https://wa.me/33780971094?text=Bonjour%20Paris%20Transpro%2C%20je%20souhaite%20un%20devis." target="_blank" rel="noopener">Écrire sur WhatsApp</a></div>
     
   </div>
   <div class="card" id="devis">
-    <h2>Votre devis en quelques clics</h2>
+    <h2>Obtenez votre devis gratuit</h2><p class="card-trust">Gratuit · Sans engagement · Réponse sous 24 h</p>
     <div class="steps" aria-label="Progression du formulaire"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="steps-labels" aria-hidden="true"><span class="on">Départ</span><span>Arrivée</span><span>Contenu</span><span>Départ</span><span>Arrivée</span><span>Date</span><span>Contact</span></div>
-    <form id="f" onsubmit="return false">
+    <form id="f" onsubmit="return false" novalidate><p class="form-error" id="formError" role="alert" aria-live="polite"></p>
       <div class="step on" data-s="0">
         <h3>Départ de</h3><div class="row"><div><label for="depCode">Code postal*</label><input id="depCode" inputmode="numeric" placeholder="Ex. 75001"></div><div><label for="depVille">Ville*</label><input id="depVille" placeholder="Ex. Paris"></div></div>
         <label for="depAddr">Adresse* <span style="font-weight:400;color:var(--muted)">Numéro + nom de rue</span></label><input id="depAddr" placeholder="Ex. 12 rue de la Paix">
@@ -297,11 +297,12 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
 <script>
 var cur=0,sel={etat:"Roulant",type:"Camion plateau"};
 function $(i){return document.getElementById(i)}
-function show(n){cur=n;document.querySelectorAll(".step").forEach(function(s){s.classList.toggle("on",+s.dataset.s===n)});
-document.querySelectorAll(".steps i").forEach(function(b,i){b.classList.toggle("on",i<=Math.min(n,6))});
+function show(n){cur=n;var error=$("formError");if(error)error.textContent="";document.querySelectorAll(".step").forEach(function(s){s.classList.toggle("on",+s.dataset.s===n)});
+document.querySelectorAll(".steps i").forEach(function(b,i){b.classList.toggle("on",i<=Math.min(n,6));b.setAttribute("aria-current",i===n?"step":"false")});
 document.querySelectorAll(".steps-labels span").forEach(function(b,i){b.classList.toggle("on",i<=Math.min(n,6))})}
-function need(ids){for(var i=0;i<ids.length;i++){var e=$(ids[i]);if(!e.value.trim()){e.focus();return false}}return true}
-function chosen(key){if(!sel[key]){var group=document.querySelector('[data-k="'+key+'"]');if(group)group.scrollIntoView({block:"center"});return false}return true}
+function fail(message,id){var error=$("formError");if(error)error.textContent=message;var field=id&&$(id);if(field){field.setAttribute("aria-invalid","true");field.focus()}return false}
+function need(ids,message){for(var i=0;i<ids.length;i++){var e=$(ids[i]);if(!e.value.trim())return fail(message||"Renseignez les champs obligatoires pour continuer.",e.id)}return true}
+function chosen(key){if(!sel[key]){var group=document.querySelector('[data-k="'+key+'"]');if(group)group.scrollIntoView({block:"center"});return fail("Sélectionnez une option pour continuer")}return true}
 function go(n){if(n>cur){if(cur===0&&!need(["depCode","depVille","depAddr"]))return;if(cur===1&&!need(["arrVille","arrAddr"]))return;if(cur===2&&!chosen("moveType"))return;if(cur===3&&!need(["currentType","volume"]))return;if(cur===3&&$("currentType").value==="Appartement"&&!chosen("currentElevator"))return;if(cur===4&&!need(["newType"]))return;if(cur===5&&(!chosen("dateType")||!need(["dateFrom"])||(sel.dateType==="Dans une plage de dates"&&!need(["dateTo"]))))return}show(n)}
 document.querySelectorAll(".opts").forEach(function(g){g.addEventListener("click",function(e){var o=e.target.closest(".opt");if(!o)return;
 g.querySelectorAll(".opt").forEach(function(x){x.classList.remove("sel")});o.classList.add("sel");sel[g.dataset.k]=o.dataset.v})});
