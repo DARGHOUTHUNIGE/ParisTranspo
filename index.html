@@ -38,7 +38,7 @@ h1{font-size:clamp(2rem,5vw,3.1rem);line-height:1.15;margin:.4em 0}
 .badges{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;font-size:.9rem;color:#c9d0e2}
 .card{background:var(--surface);color:var(--text);border-radius:16px;padding:26px;box-shadow:0 12px 40px rgba(0,0,0,.18)}
 .card h2{margin:0 0 4px;font-size:1.3rem}.card-trust{color:var(--muted);font-size:.82rem;margin:0 0 8px}
-.steps{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:12px 0 18px}.steps i{height:5px;border-radius:3px;background:var(--line);font-style:normal}.steps i.on{background:var(--accent)}.steps-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.68rem;margin-top:-12px;margin-bottom:12px}.steps-labels span.on{color:var(--accent);font-weight:700}.form-error{min-height:0;color:#b00020;font-size:.82rem;margin:0}.form-error:not(:empty){margin:8px 0}
+.steps{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:12px 0 8px}.steps i{height:6px;border-radius:3px;background:var(--line);font-style:normal;transition:background .2s}.steps i.on{background:var(--accent)}.step-counter{color:var(--muted);font-size:.78rem;font-weight:700;margin:0 0 10px}.steps-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.68rem;margin:0 0 12px}.steps-labels span.on{color:var(--accent);font-weight:700}.form-error{min-height:0;color:#b00020;font-size:.82rem;margin:0}.form-error:not(:empty){margin:8px 0}
 label{display:block;font-size:.85rem;font-weight:600;margin:12px 0 4px}
 input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--text);font:inherit}
 input[type="date"]{display:block;min-width:0;max-width:100%;appearance:auto}
@@ -153,6 +153,7 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
   .card h2{font-size:1.35rem}
   .row{grid-template-columns:1fr}
   .move-options{grid-template-columns:1fr}
+  .steps-labels{display:none}
   input,select,textarea{font-size:16px}
   .nav2{gap:8px}
   .nav2 .btn{min-height:48px}
@@ -186,6 +187,7 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
   <div class="card" id="devis">
     <h2>Obtenez votre devis gratuit</h2><p class="card-trust">Gratuit · Sans engagement · Réponse sous 24 h</p>
     <div class="steps" aria-label="Progression du formulaire"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="step-counter" id="stepCounter">Étape 1 sur 7</p>
     <div class="steps-labels" aria-hidden="true"><span class="on">Départ</span><span>Arrivée</span><span>Contenu</span><span>Départ</span><span>Arrivée</span><span>Date</span><span>Contact</span></div>
     <form id="f" onsubmit="return false" novalidate><p class="form-error" id="formError" role="alert" aria-live="polite"></p>
       <div class="step on" data-s="0">
@@ -297,7 +299,7 @@ section > .wrap > .t + .sub{display:block;width:100%;text-align:center !importan
 <script>
 var cur=0,sel={etat:"Roulant",type:"Camion plateau"};
 function $(i){return document.getElementById(i)}
-function show(n){cur=n;var error=$("formError");if(error)error.textContent="";document.querySelectorAll(".step").forEach(function(s){s.classList.toggle("on",+s.dataset.s===n)});
+function show(n){cur=n;var error=$("formError");if(error)error.textContent="";var counter=$("stepCounter");if(counter)counter.textContent=n<7?"Étape "+(n+1)+" sur 7":"Demande prête à envoyer";document.querySelectorAll(".step").forEach(function(s){s.classList.toggle("on",+s.dataset.s===n)});
 document.querySelectorAll(".steps i").forEach(function(b,i){b.classList.toggle("on",i<=Math.min(n,6));b.setAttribute("aria-current",i===n?"step":"false")});
 document.querySelectorAll(".steps-labels span").forEach(function(b,i){b.classList.toggle("on",i<=Math.min(n,6))})}
 function fail(message,id){var error=$("formError");if(error)error.textContent=message;var field=id&&$(id);if(field){field.setAttribute("aria-invalid","true");field.focus()}return false}
