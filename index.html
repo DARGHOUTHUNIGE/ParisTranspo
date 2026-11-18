@@ -2,10 +2,12 @@
 <html lang="fr">
 <head>
 <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5PKSN7LT"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18575624510"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
+  gtag('config', 'AW-18575624510');
 </script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -341,6 +343,14 @@ document.querySelectorAll("input,select,textarea").forEach(function(field){field
 document.getElementById("currentType").addEventListener("change",function(){var field=document.getElementById("currentElevatorField");field.hidden=this.value==="Maison";if(this.value==="Maison")delete sel.currentElevator});
 document.getElementById("currentElevatorField").hidden=true;
 var quoteBody="";
+var conversionSent=false;
+function trackAppointmentConversion(){
+  if(conversionSent)return;
+  conversionSent=true;
+  gtag('event','conversion',{
+    'send_to':'AW-18575624510/N-KACKnQlLodEL6SxplF'
+  });
+}
 function prepareQuote(channel){var required=["nom","pre","tel"];if(channel==="email")required.push("mail");if(!need(required))return false;if(!$("rgpd").checked){$("rgpd").focus();return false}
 quoteBody=[
   "Service: Déménagement",
@@ -355,8 +365,9 @@ quoteBody=[
 ].join("\n");return true}
 function send(){if(!prepareQuote("email"))return;show(7);
 /* À brancher : remplacez par votre backend / formulaire. Par défaut ouvre l'e-mail. */
+trackAppointmentConversion();
 window.location.href="mailto:ptranspro.info@gmail.com?subject="+encodeURIComponent("Demande de devis")+"&body="+encodeURIComponent(quoteBody)}
-function sendWhatsAppDirect(){if(!prepareQuote("whatsapp"))return;show(7);window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
+function sendWhatsAppDirect(){if(!prepareQuote("whatsapp"))return;show(7);trackAppointmentConversion();window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
 function sendWhatsApp(){if(!quoteBody)return;window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
 
 var H={"confidentialite":"priv","mentions-legales":"ment","cgv":"cgv"},K={priv:"confidentialite",ment:"mentions-legales",cgv:"cgv"};
