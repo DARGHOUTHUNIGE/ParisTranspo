@@ -354,15 +354,16 @@ document.getElementById("currentType").addEventListener("change",function(){var 
 document.getElementById("currentElevatorField").hidden=true;
 var quoteBody="";
 var conversionSent=false;
-function gtag_report_conversion(url){
+function gtag_report_conversion(){
   if(conversionSent)return;
   conversionSent=true;
   gtag('event','conversion',{
-    'send_to':'AW-18575624510/0TctCPetsb0dEL6SxplF',
-    'event_callback':function(){
-      if(url)window.location=url;
-    }
+    'send_to':'AW-18575624510/0TctCPetsb0dEL6SxplF'
   });
+}
+function showThankYou(){
+  show(7);
+  if(location.hash!=="#merci")history.pushState(null,"","#merci");
 }
 function prepareQuote(channel){var required=["nom","pre","tel"];if(channel==="email")required.push("mail");if(!need(required))return false;if(!$("rgpd").checked){$("rgpd").focus();return false}
 quoteBody=[
@@ -376,11 +377,11 @@ quoteBody=[
   "Détails: "+($("det").value||"Aucun"),
   "Contact: "+$("pre").value+" "+$("nom").value+" / "+$("tel").value+" / "+($("mail").value||"E-mail non communiqué")
 ].join("\n");return true}
-function send(){if(!prepareQuote("email"))return;show(7);
+function send(){if(!prepareQuote("email"))return;showThankYou();
 /* À brancher : remplacez par votre backend / formulaire. Par défaut ouvre l'e-mail. */
-var mailUrl="mailto:ptranspro.info@gmail.com?subject="+encodeURIComponent("Demande de devis")+"&body="+encodeURIComponent(quoteBody);
-gtag_report_conversion(mailUrl)}
-function sendWhatsAppDirect(){if(!prepareQuote("whatsapp"))return;show(7);gtag_report_conversion();window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
+gtag_report_conversion();
+window.location.href="mailto:ptranspro.info@gmail.com?subject="+encodeURIComponent("Demande de devis")+"&body="+encodeURIComponent(quoteBody)}
+function sendWhatsAppDirect(){if(!prepareQuote("whatsapp"))return;showThankYou();gtag_report_conversion();window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
 function sendWhatsApp(){if(!quoteBody)return;window.open("https://wa.me/33780971094?text="+encodeURIComponent(quoteBody),"_blank")}
 
 var H={"confidentialite":"priv","mentions-legales":"ment","cgv":"cgv"},K={priv:"confidentialite",ment:"mentions-legales",cgv:"cgv"};
@@ -388,7 +389,8 @@ function openL(k){$("mc").innerHTML=document.getElementById("t-"+k).innerHTML;$(
 function closeL(){$("m").classList.remove("on");document.body.style.overflow=""}
 document.addEventListener("click",function(e){var a=e.target.closest("[data-l]");if(a){e.preventDefault();openL(a.dataset.l);return}if(e.target===$("m")||e.target.closest(".x"))closeL()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closeL()});
-(function(){var h=location.hash.slice(1);if(H[h])openL(H[h]);var t=$("trk");if(t){Array.prototype.slice.call(t.children).forEach(function(c){var n=c.cloneNode(true);n.setAttribute("aria-hidden","true");t.appendChild(n)})}})();
+window.addEventListener("hashchange",function(){var h=location.hash.slice(1);if(h==="merci"&&$("f"))show(7);else if(h!==""&&!H[h]&&cur===7)show(0)});
+(function(){var h=location.hash.slice(1);if(H[h])openL(H[h]);if(h==="merci"&&$("f"))show(7);var t=$("trk");if(t){Array.prototype.slice.call(t.children).forEach(function(c){var n=c.cloneNode(true);n.setAttribute("aria-hidden","true");t.appendChild(n)})}})();
 try{var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});document.querySelectorAll('.box,.routes,details,.stats').forEach(function(el){el.classList.add('rv');io.observe(el)})}catch(e){document.querySelectorAll('.rv').forEach(function(el){el.classList.add('in')})}
 </script>
 <script>
